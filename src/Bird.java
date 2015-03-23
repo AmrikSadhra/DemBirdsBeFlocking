@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Bird {
     //Constants for code readbility
     public static final int IN_FLOCK = 0, SEARCHING = 1;
@@ -10,19 +12,19 @@ public class Bird {
     private boolean penIsDown; // state of the pen, true when pen down
     public CartesianDouble currentPosition; // current x,y coordinate
     private Canvas canvas; // private instance variable reference to a canvas object
+    private Point mouseCoords;
 
     //Constructor
     public Bird(Canvas canvas) {
         birdNumber = birdCounter;
         birdCounter++;
         this.canvas = canvas;
-        //this.currentPosition = new CartesianDouble(Utils.genRandom(20, 780), Utils.genRandom(20, 580));
-        this.currentPosition = new CartesianDouble(Utils.genRandom(380, 420), 300);
-        this.currentAngle = 90;
+        this.currentPosition = new CartesianDouble(Utils.genRandom(20, 780), Utils.genRandom(20, 580));
+        this.currentAngle = Utils.genRandom(0, 360);
         this.drawBird();
     }
 
-    public void Fly(Flock flock) {
+    public void simulate(Flock flock) {
 
         if (this.currentPosition.getX() >= 800) {
             this.currentPosition.setX(1);
@@ -44,13 +46,12 @@ public class Bird {
         if (birdState == IN_FLOCK) {
             this.turn(Utils.genRandom(-10, 10));
         }
+        mouseCoords = MouseInfo.getPointerInfo().getLocation();
+
         if (birdState == SEARCHING) {
-            if (currentAngle < flock.getAverageBirdHeading(birdNumber))
-
-            int angle =
-            this.currentAngle = this.currentAngle + angle;
-
-            (int) flock.getAverageBirdHeading(birdNumber);
+            if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle++;
+            if (currentAngle > flock.getAverageBirdHeading(birdNumber)) this.currentAngle--;
+            else this.turn(Utils.genRandom(-10, 10));
         }
     }
 

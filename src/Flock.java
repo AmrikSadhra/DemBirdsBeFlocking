@@ -7,7 +7,7 @@ public class Flock {
     public ArrayList<Double> localBirdHeadings = new ArrayList<Double>();
 
     private int i;
-    private int radius = 200;
+    private int radius = 20;
 
 
     public Flock(Canvas canvas, int numBirds) {
@@ -20,17 +20,16 @@ public class Flock {
         }
     }
 
-    public void startFlocking(Canvas canvas) {
+    public void Fly(Canvas canvas) {
         //currentBird is the currently selected bird instance from the arraylist
 
         while (1 == 1) {
             updateCanvas(canvas, false);
             for (Bird currentBird : birdArrayList) {
                 currentBird.setSpeed(1);
-                currentBird.Fly(this);
+                currentBird.simulate(this);
             }
             updateCanvas(canvas, true);
-            localBirds();
             Utils.pause(20);
         }
     }
