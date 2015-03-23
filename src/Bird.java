@@ -17,13 +17,14 @@ public class Bird {
         birdNumber = birdCounter;
         birdCounter++;
         this.canvas = canvas;
-        //this.currentPosition = new CartesianDouble(Utils.genRandom(20, 780), Utils.genRandom(20, 580));
-        this.currentPosition = new CartesianDouble(Utils.genRandom(380, 420), Utils.genRandom(280, 320));
+        this.currentPosition = new CartesianDouble(Utils.genRandom(20, 780), Utils.genRandom(20, 580));
+        //this.currentPosition = new CartesianDouble(Utils.genRandom(380, 420), Utils.genRandom(280, 320));
         this.currentAngle = Utils.genRandom(0, 360);
         this.drawBird();
     }
 
     public void simulate(Flock flock) {
+        int birdState = ALIGNMENT;
         mouseCoords = MouseInfo.getPointerInfo().getLocation();
 
        //Wrap around if bird goes off screen
@@ -40,32 +41,37 @@ public class Bird {
             this.currentPosition.setY(600);
         }
         this.move(5);
-        this.intelliTurn(flock, COHESION);
-        /*
-        if (Crowded)  this.intelliTurn(flock, SEPARATION);
-        if (Alone)  this.intelliTurn(flock, ALIGNMENT);
-        if (Just_Right) this.intelliTurn(flock, COHESION);*/
+
+        //System.out.println("Number of birds surrounding bird " + birdNumber + " is " +flock.getNumLocalBirds(birdNumber));
+        if(flock.getNumLocalBirds(birdNumber) > 5) birdState = SEPARATION;
+        if(flock.getNumLocalBirds(birdNumber) <= 5) birdState = ALIGNMENT;
+
+        this.intelliTurn(flock, birdState);
+        //if (Just_Right) this.intelliTurn(flock, COHESION);
     }
 
     public void intelliTurn(Flock flock, int birdState) {
-
+        int i;
+        flock.localBirds(); //Update localBirdList
+        //Wrap around
+        if (currentAngle <= 0) currentAngle+=360;
+        if (currentAngle >= 360) currentAngle-=360;
 
         switch(birdState) {
             case SEPARATION:
-                this.turn(Utils.genRandom(-10, 10));
+                //Steer away from the flock TODO change behaviour so we leave further
+                if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle-=5;
+                if (currentAngle >= flock.getAverageBirdHeading(birdNumber)) this.currentAngle+=5;
                 break;
 
             case COHESION:
-                //Limit range: wraparound
-                if (currentAngle >= 360) currentAngle-= 360;
-                if (currentAngle <= -360) currentAngle-= 0;
-                //Turn towards average heading
-                if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle++;
-                if (currentAngle > flock.getAverageBirdHeading(birdNumber)) this.currentAngle--;
-                else this.turn(Utils.genRandom(-10, 10));
                 break;
 
             case ALIGNMENT:
+                //Turn towards average heading
+                if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle+=5;
+                if (currentAngle > flock.getAverageBirdHeading(birdNumber)) this.currentAngle-=5;
+                if (currentAngle == flock.getAverageBirdHeading(birdNumber)) this.turn(Utils.genRandom(-10, 10));
                 break;
         }
     }
@@ -139,13 +145,6 @@ public class Bird {
             this.drawLine(localPosition, nextPosition);
             // update local position reference to point at new position
             localPosition = nextPosition;
-        }
-    }
-
-    public void undrawBird() {
-        for (int i = 0; i < 4; i++) // remove 4 lines from canvas
-        {
-            this.canvas.removeMostRecentLine();
         }
     }
 

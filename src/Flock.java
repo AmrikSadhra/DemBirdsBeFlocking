@@ -7,7 +7,8 @@ public class Flock {
     public ArrayList<Double> localBirdHeadings = new ArrayList<Double>();
 
     private int i;
-    private int radius = 20;
+    private int radius = 300;
+    private int numBirds;
 
 
     public Flock(Canvas canvas, int numBirds) {
@@ -18,6 +19,7 @@ public class Flock {
             localBirdHeadings.add(0.0);
             localBirdList.add(localBirdID);
         }
+        this.numBirds = numBirds;
     }
 
     public void Fly(Canvas canvas) {
@@ -42,17 +44,19 @@ public class Flock {
             currentX = (int) birdArrayList.get(j).currentPosition.getX();
             currentY = (int) birdArrayList.get(j).currentPosition.getY();
             currentHeading = birdArrayList.get(j).getHeading();
+
             sectorStartAngle = currentHeading - 180;
             sectorEndAngle = currentHeading + 180;
-            //check nearby birds to see if they're within radius ADD PACMAN SHAPE BEHAVIOUR
+
+            //check nearby birds to see if they're within radius TODO add PACMAN
             for (i = 0; i <= birdArrayList.size() - 1; i++) {
                 potentialNeighbourX = (int) birdArrayList.get(i).currentPosition.getX();
                 potentialNeighbourY = (int) birdArrayList.get(i).currentPosition.getY();
                 angleToNeighbour = (int) Math.atan2(potentialNeighbourY - currentY, potentialNeighbourX - currentX);
-                if ((Math.pow((potentialNeighbourX - currentX), 2) + Math.pow((potentialNeighbourY - currentY), 2)) <= Math.pow(radius, 2)){
+                if ((Math.pow((potentialNeighbourX - currentX), 2) + Math.pow((potentialNeighbourY - currentY), 2)) <= Math.pow(radius, 2))
+                {
+                    //)&&(angleToNeighbour >= sectorStartAngle)&&(angleToNeighbour<=sectorEndAngle)
                     localBirdID.set(i, i);
-                    /*&&(angleToNeighbour >= sectorStartAngle)&&((angleToNeighbour <= sectorEndAngle))
-                    System.out.println("You in da sector");*/
                 } else {
                     localBirdID.set(i, -1);
                 }
@@ -64,20 +68,38 @@ public class Flock {
 
     public double getAverageBirdHeading(int birdNumber) {
         int i, runningTotal = 0;
-        int neighbourBirdID, numBirds, numLocalBirds;
-        double neighbourHeading, averageHeading;
+        int neighbourBirdID, numLocalBirds;
+        double neighbourHeading, averageHeading, outAngle;
 
-        numBirds = localBirdList.size() -1;
-        numLocalBirds = numBirds;
+        numLocalBirds = getNumLocalBirds(birdNumber);
 
         //Retrieve angle from birdArrayList of id that corresponds to localBirdList
         for (i = 0; i <= numBirds; i++) {
             neighbourBirdID = Integer.parseInt(localBirdList.get(birdNumber).get(i).toString());//Holy hack
             if (neighbourBirdID != -1) runningTotal += birdArrayList.get(neighbourBirdID).getHeading();
-            else numLocalBirds--;
         }
-        if (numLocalBirds != 0 ){return runningTotal/numLocalBirds;}
-        else return 0.0;
+        if (numLocalBirds != 0 ){outAngle = runningTotal/numLocalBirds;}
+        else outAngle = 0.0;
+
+        //Limit range: wraparound
+        if (outAngle <= 0) outAngle += 360;
+        if (outAngle >= 360) outAngle -= 360;
+
+        System.out.println("Avg Bird heading of " + birdNumber + " is " + outAngle);
+
+        return outAngle;
+    }
+
+    public int getNumLocalBirds(int birdNumber){
+        int i, numLocalBirds, neighbourBirdID;
+
+        numLocalBirds = numBirds;
+
+        for (i = 0; i <= numBirds; i++) {
+            neighbourBirdID = Integer.parseInt(localBirdList.get(birdNumber).get(i).toString());
+            if (neighbourBirdID == -1) numLocalBirds--;
+        }
+        return numLocalBirds;
     }
 
     private void updateCanvas(Canvas canvas, boolean ready) {

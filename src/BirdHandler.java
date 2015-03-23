@@ -1,5 +1,6 @@
 public class BirdHandler
 {
+    private int numBirds;
     public static void main(String [] args)
     {
         Canvas mycanvas = new Canvas(800,600);

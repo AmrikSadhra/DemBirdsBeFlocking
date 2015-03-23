@@ -8,9 +8,9 @@ public class Utils {
     }
 
     public static int genRandom(int min, int max){
-        int finalRand;
 
-       finalRand = (int)Math.floor(Math.random() * (max - min)) + min;
+        int finalRand = -min + (int) (Math.random() * ((max - (-min)) + 1));
+
         return finalRand;
     }
 }
