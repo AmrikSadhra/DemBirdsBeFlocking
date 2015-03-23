@@ -5,10 +5,8 @@ public class Bird {
     public static final int COHESION = 0, SEPARATION = 1, ALIGNMENT = 2;
 
     //Instance Variables
-    private int currentAngle, birdNumber; // current angle that Bird is facing (in degrees)
-    private static int pixelsToMove, i;
-    private static int birdCounter;
-    private int speed;
+    private int currentAngle, birdNumber, speed; //Current angle that Bird is facing (in degrees),
+    private static int pixelsToMove, i, birdCounter;
     private boolean penIsDown; // state of the pen, true when pen down
     public CartesianDouble currentPosition; // current x,y coordinate
     private Canvas canvas; // private instance variable reference to a canvas object
@@ -19,7 +17,8 @@ public class Bird {
         birdNumber = birdCounter;
         birdCounter++;
         this.canvas = canvas;
-        this.currentPosition = new CartesianDouble(Utils.genRandom(20, 780), Utils.genRandom(20, 580));
+        //this.currentPosition = new CartesianDouble(Utils.genRandom(20, 780), Utils.genRandom(20, 580));
+        this.currentPosition = new CartesianDouble(Utils.genRandom(380, 420), Utils.genRandom(280, 320));
         this.currentAngle = Utils.genRandom(0, 360);
         this.drawBird();
     }
@@ -41,12 +40,15 @@ public class Bird {
             this.currentPosition.setY(600);
         }
         this.move(5);
+        this.intelliTurn(flock, COHESION);
+        /*
         if (Crowded)  this.intelliTurn(flock, SEPARATION);
         if (Alone)  this.intelliTurn(flock, ALIGNMENT);
-        if (Just_Right) this.intelliTurn(flock, COHESION);
+        if (Just_Right) this.intelliTurn(flock, COHESION);*/
     }
 
     public void intelliTurn(Flock flock, int birdState) {
+
 
         switch(birdState) {
             case SEPARATION:
@@ -54,6 +56,10 @@ public class Bird {
                 break;
 
             case COHESION:
+                //Limit range: wraparound
+                if (currentAngle >= 360) currentAngle-= 360;
+                if (currentAngle <= -360) currentAngle-= 0;
+                //Turn towards average heading
                 if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle++;
                 if (currentAngle > flock.getAverageBirdHeading(birdNumber)) this.currentAngle--;
                 else this.turn(Utils.genRandom(-10, 10));
@@ -106,7 +112,6 @@ public class Bird {
         return new CartesianDouble(newX, newY);
     }
 
-
     private void drawLine(CartesianDouble startPoint, CartesianDouble endPoint) {
         this.canvas.drawLineBetweenPoints(startPoint.getCartesian(), endPoint.getCartesian(), "blue");
     }
@@ -137,7 +142,6 @@ public class Bird {
         }
     }
 
-
     public void undrawBird() {
         for (int i = 0; i < 4; i++) // remove 4 lines from canvas
         {
@@ -148,6 +152,4 @@ public class Bird {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
-
-
 }

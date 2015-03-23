@@ -35,18 +35,24 @@ public class Flock {
     }
 
     public ArrayList localBirds() {
-        int i, j, currentX, currentY, potentialNeighbourX, potentialNeighbourY;
+        int i, j, sectorStartAngle, sectorEndAngle, angleToNeighbour, currentX, currentY, potentialNeighbourX, potentialNeighbourY, currentHeading;
 
         //Retrieve coords of every bird, but for each bird, retrieve list of birds nearby
         for (j = 0; j <= birdArrayList.size() - 1; j++) {
             currentX = (int) birdArrayList.get(j).currentPosition.getX();
             currentY = (int) birdArrayList.get(j).currentPosition.getY();
+            currentHeading = birdArrayList.get(j).getHeading();
+            sectorStartAngle = currentHeading - 180;
+            sectorEndAngle = currentHeading + 180;
             //check nearby birds to see if they're within radius ADD PACMAN SHAPE BEHAVIOUR
             for (i = 0; i <= birdArrayList.size() - 1; i++) {
                 potentialNeighbourX = (int) birdArrayList.get(i).currentPosition.getX();
                 potentialNeighbourY = (int) birdArrayList.get(i).currentPosition.getY();
-                if ((Math.pow((potentialNeighbourX - currentX), 2) + Math.pow((potentialNeighbourY - currentY), 2)) <= Math.pow(radius, 2)) {
+                angleToNeighbour = (int) Math.atan2(potentialNeighbourY - currentY, potentialNeighbourX - currentX);
+                if ((Math.pow((potentialNeighbourX - currentX), 2) + Math.pow((potentialNeighbourY - currentY), 2)) <= Math.pow(radius, 2)){
                     localBirdID.set(i, i);
+                    /*&&(angleToNeighbour >= sectorStartAngle)&&((angleToNeighbour <= sectorEndAngle))
+                    System.out.println("You in da sector");*/
                 } else {
                     localBirdID.set(i, -1);
                 }
