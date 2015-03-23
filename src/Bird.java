@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class Bird {
     //Constants for code readbility
-    public static final int IN_FLOCK = 0, SEARCHING = 1;
+    public static final int COHESION = 0, SEPARATION = 1, ALIGNMENT = 2;
 
     //Instance Variables
     private int currentAngle, birdNumber; // current angle that Bird is facing (in degrees)
@@ -25,7 +25,9 @@ public class Bird {
     }
 
     public void simulate(Flock flock) {
+        mouseCoords = MouseInfo.getPointerInfo().getLocation();
 
+       //Wrap around if bird goes off screen
         if (this.currentPosition.getX() >= 800) {
             this.currentPosition.setX(1);
         }
@@ -39,19 +41,26 @@ public class Bird {
             this.currentPosition.setY(600);
         }
         this.move(5);
-        this.intelliTurn(flock, SEARCHING);
+        if (Crowded)  this.intelliTurn(flock, SEPARATION);
+        if (Alone)  this.intelliTurn(flock, ALIGNMENT);
+        if (Just_Right) this.intelliTurn(flock, COHESION);
     }
 
     public void intelliTurn(Flock flock, int birdState) {
-        if (birdState == IN_FLOCK) {
-            this.turn(Utils.genRandom(-10, 10));
-        }
-        mouseCoords = MouseInfo.getPointerInfo().getLocation();
 
-        if (birdState == SEARCHING) {
-            if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle++;
-            if (currentAngle > flock.getAverageBirdHeading(birdNumber)) this.currentAngle--;
-            else this.turn(Utils.genRandom(-10, 10));
+        switch(birdState) {
+            case SEPARATION:
+                this.turn(Utils.genRandom(-10, 10));
+                break;
+
+            case COHESION:
+                if (currentAngle < flock.getAverageBirdHeading(birdNumber)) this.currentAngle++;
+                if (currentAngle > flock.getAverageBirdHeading(birdNumber)) this.currentAngle--;
+                else this.turn(Utils.genRandom(-10, 10));
+                break;
+
+            case ALIGNMENT:
+                break;
         }
     }
 
