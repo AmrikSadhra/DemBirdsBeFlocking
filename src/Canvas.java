@@ -47,14 +47,14 @@ public class Canvas extends JPanel {
     public Canvas(int x, int y) {
         xSize = x;
         ySize = y;
-        frameTitle = "Simulator";
+        frameTitle = "Canvas";
         lines = Collections.synchronizedList(new ArrayList<LS>());
         setupCanvas();
     }
 
     private void setupCanvas() {
 
-        JFrame frame = new JFrame("Bird Flocking Simulator ");
+        JFrame frame = new JFrame("My Basic GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
         frame.pack();
@@ -121,9 +121,6 @@ public class Canvas extends JPanel {
                          this.parseColour(color)));
         repaint();
     }
-	
-
-
 
     /**
      * Draws multiple line segments to the canvas.
@@ -151,7 +148,7 @@ public class Canvas extends JPanel {
     private Color parseColour(String colour)
     {
         Color drawColor;
-/*
+
         switch (colour.toLowerCase()) {
 
             case "white":
@@ -194,9 +191,7 @@ public class Canvas extends JPanel {
                 System.out.println("Unknown colour '" + colour + "', defaulting to black.");
                 drawColor = Color.BLACK;
                 break;
-        }*/
-        drawColor = Color.BLUE;
-
+        }
         return drawColor;
     }
 

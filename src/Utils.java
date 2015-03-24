@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Utils {
     public static void pause(int time) {
         try{
@@ -8,8 +10,9 @@ public class Utils {
     }
 
     public static int genRandom(int min, int max){
+        Random generator = new Random();
 
-        int finalRand = -min + (int) (Math.random() * ((max - (-min)) + 1));
+        int finalRand = generator.nextInt(max-min) + min;
 
         return finalRand;
     }
