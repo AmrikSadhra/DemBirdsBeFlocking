@@ -67,6 +67,8 @@ public class Flock {
             }
             localBirdList.set(j, localBirdID);
         }
+
+        System.out.println(localBirdList);
         return localBirdList;
     }
 

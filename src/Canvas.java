@@ -192,6 +192,8 @@ public class Canvas extends JPanel {
                 drawColor = Color.BLACK;
                 break;
         }
+
+        drawColor = Color.BLACK;
         return drawColor;
     }
 

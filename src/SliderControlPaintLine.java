@@ -38,9 +38,11 @@ public class SliderControlPaintLine extends JFrame {
         setSize(500,500);
         setVisible(true);
     }
+
     public static void main(String arg[]) {
         new SliderControlPaintLine();
     }
+
     public JSlider createSlider(JPanel panel, int orientation, int minimumValue, int maximumValue,
                                 int initValue, int majorTickSpacing, int minorTickSpacing) {
         JSlider slider = new JSlider(orientation, minimumValue, maximumValue, initValue);
@@ -63,5 +65,4 @@ public class SliderControlPaintLine extends JFrame {
             }
         }
     }
-
 }
