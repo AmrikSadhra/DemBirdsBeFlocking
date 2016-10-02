@@ -3,22 +3,21 @@
  * Which means that a JFrame needs to be initialised first to hold it.
  */
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import java.awt.*;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <h1>Canvas</h1>
- * This class represents a canvas object that can be drawn to 
+ * This class represents a canvas object that can be drawn to
  * with various line segments.
  *
- * @author  Stuart Lacy
+ * @author Stuart Lacy
  * @version 1.0
- * @since   2015-01-19
+ * @since 2015-01-19
  */
 
 public class Canvas extends JPanel {
@@ -31,20 +30,13 @@ public class Canvas extends JPanel {
     private final static int DEFAULT_Y = 600;
 
     /**
-     * Default constructor which produces a canvas of the
-     * default size of 800 x 600.
-     */
-    public Canvas() {
-        this(DEFAULT_X, DEFAULT_Y);
-    }
-
-    /**
      * Constructor which produces a canvas of a specified size.
      *
      * @param x Width of the canvas.
      * @param y Height of the canvas.
      */
-    public Canvas(int x, int y) {
+    public Canvas(int x, int y, Color inputColour) {
+        this.setBackground(inputColour);
         xSize = x;
         ySize = y;
         frameTitle = "Canvas";
@@ -54,7 +46,7 @@ public class Canvas extends JPanel {
 
     private void setupCanvas() {
 
-        JFrame frame = new JFrame("My Basic GUI");
+        JFrame frame = new JFrame("DemBirdsBeFlocking");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
         frame.pack();
@@ -73,17 +65,17 @@ public class Canvas extends JPanel {
      */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);  // Smoother lines
         g2.setStroke(new BasicStroke(3));
 
-        synchronized(lines) {
+        synchronized (lines) {
             for (LS line : lines) {
                 g2.setColor(line.getColor());
-                g2.draw(new Line2D.Float(line.getStartX(), line.getStartY(), 
-                           line.getEndX(), line.getEndY()));
+                g2.draw(new Line2D.Float(line.getStartX(), line.getStartY(),
+                        line.getEndX(), line.getEndY()));
             }
         }
     }
@@ -92,15 +84,15 @@ public class Canvas extends JPanel {
      * Draws a line between 2 CartesianCoordinates to the canvas.
      *
      * @param startPoint Starting coordinate.
-     * @param endPoint Ending coordinate.
-     * @param color The colour in which to draw the line, as a String. Accepts the following values:
-     *  white, black, blue, cyan, gray, darkgray, lightgray, green, magenta, red, orange, yellow
+     * @param endPoint   Ending coordinate.
+     * @param color      The colour in which to draw the line, as a String. Accepts the following values:
+     *                   white, black, blue, cyan, gray, darkgray, lightgray, green, magenta, red, orange, yellow
      * @return Nothing.
      */
     public void drawLineBetweenPoints(CartesianCoordinate startPoint, CartesianCoordinate endPoint, String color) {
-        lines.add(new LS(startPoint.getX(), startPoint.getY(), 
-                                  endPoint.getX(), endPoint.getY(),
-                                  this.parseColour(color)));
+        lines.add(new LS(startPoint.getX(), startPoint.getY(),
+                endPoint.getX(), endPoint.getY(),
+                this.parseColour(color)));
 
         repaint();
     }
@@ -108,17 +100,17 @@ public class Canvas extends JPanel {
     /**
      * Draws a line segment to the canvas.
      *
-     * @param line The LineSegment to draw.
+     * @param line  The LineSegment to draw.
      * @param color The colour in which to draw the line, as a String. Accepts the following values:
-     *  white, black, blue, cyan, gray, darkgray, lightgray, green, magenta, red, orange, yellow
+     *              white, black, blue, cyan, gray, darkgray, lightgray, green, magenta, red, orange, yellow
      * @return Nothing.
      */
     public void drawLineSegment(LineSegment line, String color) {
 
 
-        lines.add(new LS(line.getStartPoint().getX(), line.getStartPoint().getY(), 
-                         line.getEndPoint().getX(), line.getEndPoint().getY(),
-                         this.parseColour(color)));
+        lines.add(new LS(line.getStartPoint().getX(), line.getStartPoint().getY(),
+                line.getEndPoint().getX(), line.getEndPoint().getY(),
+                this.parseColour(color)));
         repaint();
     }
 
@@ -126,15 +118,15 @@ public class Canvas extends JPanel {
      * Draws multiple line segments to the canvas.
      *
      * @param lineSegments An array of LineSegment.
-     * @param color The colour in which to draw the line, as a String. Accepts the following values:
-     *  white, black, blue, cyan, gray, darkgray, lightgray, green, magenta, red, orange, yellow
+     * @param color        The colour in which to draw the line, as a String. Accepts the following values:
+     *                     white, black, blue, cyan, gray, darkgray, lightgray, green, magenta, red, orange, yellow
      * @return Nothing.
      */
-    public void drawLineSegments(LineSegment [] lineSegments, String color) {
+    public void drawLineSegments(LineSegment[] lineSegments, String color) {
         for (LineSegment l : lineSegments) {
-            lines.add(new LS(l.getStartPoint().getX(), l.getStartPoint().getY(), 
-                             l.getEndPoint().getX(), l.getEndPoint().getY(),
-                             this.parseColour(color)));
+            lines.add(new LS(l.getStartPoint().getX(), l.getStartPoint().getY(),
+                    l.getEndPoint().getX(), l.getEndPoint().getY(),
+                    this.parseColour(color)));
         }
         repaint();
     }
@@ -145,8 +137,7 @@ public class Canvas extends JPanel {
      * @param colour The desired colour as a string.
      * @return The Color representation of this value.
      */
-    private Color parseColour(String colour)
-    {
+    private Color parseColour(String colour) {
         Color drawColor;
 
         switch (colour.toLowerCase()) {
@@ -192,8 +183,6 @@ public class Canvas extends JPanel {
                 drawColor = Color.BLACK;
                 break;
         }
-
-        drawColor = Color.BLACK;
         return drawColor;
     }
 
@@ -204,9 +193,8 @@ public class Canvas extends JPanel {
      * @param None.
      * @return Nothing.
      */
-    public void removeMostRecentLine()
-    {
-        this.lines.remove(this.lines.size()-1);
+    public void removeMostRecentLine() {
+        this.lines.remove(this.lines.size() - 1);
     }
 
 
@@ -223,7 +211,7 @@ public class Canvas extends JPanel {
 
     /**
      * <h1>LS</h1>
-     * Class to contain x and y starting and ending coordinates 
+     * Class to contain x and y starting and ending coordinates
      * of a line segment.
      *
      * @author Stuart Lacy
@@ -240,8 +228,8 @@ public class Canvas extends JPanel {
          *
          * @param startX Initial x-coordinate of the line segment.
          * @param startY Initial y-coordinate of the line segment.
-         * @param endX Ending x-coordinate of the line segment.
-         * @param endY Ending y-coordinate of the line segment.
+         * @param endX   Ending x-coordinate of the line segment.
+         * @param endY   Ending y-coordinate of the line segment.
          */
         public LS(int startX, int startY, int endX, int endY, Color c) {
             this.startX = startX;

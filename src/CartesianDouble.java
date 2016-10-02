@@ -1,9 +1,9 @@
 /**
  * ************************************************************************
- * <p/>
+ * <p>
  * CARTESIAN DOUBLE
  * Class to store x and y coordinate pair as doubles.
- * <p/>
+ * <p>
  * *************************************************************************
  */
 public class CartesianDouble {
